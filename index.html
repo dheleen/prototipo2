@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Catálogo de Productos</title>
+  <style>
+    /* Reset ligero */
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Inter, system-ui, Arial, sans-serif}
+    body{background:#f6f7fb;color:#111}
+    header{background:#fff;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 0 rgba(0,0,0,0.06)}
+    .brand{font-weight:700;letter-spacing:0.2px}
+    nav a{margin-left:12px;color:#333;text-decoration:none;font-weight:600}
+    main{padding:24px;max-width:1100px;margin:0 auto}
+
+    /* INDEX - grid de productos */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+    .card{background:#fff;border-radius:12px;padding:12px;box-shadow:0 6px 20px rgba(17,24,39,0.06);display:flex;flex-direction:column}
+    .thumb{height:150px;border-radius:8px;background:linear-gradient(135deg,#e2e8f0,#cbd5e1);display:flex;align-items:center;justify-content:center;color:#667; font-size:14px}
+    .meta{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+    .title{font-weight:700}
+    .price{color:#0f766e;font-weight:700}
+    .actions{margin-top:auto;display:flex;gap:8px}
+    button{cursor:pointer;border:0;padding:8px 12px;border-radius:8px;font-weight:700}
+    .btn-primary{background:#111827;color:#fff}
+    .btn-ghost{background:transparent;border:1px dashed #e6e7eb;color:#111}
+
+    /* PRODUCT DETAIL */
+    .detail{display:flex;gap:24px;align-items:flex-start}
+    .detail .img{width:48%;min-height:320px;border-radius:12px;background:linear-gradient(135deg,#fef3c7,#fee2e2);display:flex;align-items:center;justify-content:center}
+    .detail .info{flex:1}
+    .badge{display:inline-block;background:#eef2ff;color:#3730a3;padding:6px 10px;border-radius:999px;font-weight:700;margin-bottom:10px}
+
+    /* CART */
+    .cart-list{background:#fff;padding:16px;border-radius:12px;box-shadow:0 6px 20px rgba(17,24,39,0.06)}
+    .cart-item{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #f1f3f7}
+    .cart-item:last-child{border-bottom:none}
+
+    /* Utilities */
+    .hidden{display:none}
+    .muted{color:#6b7280}
+    footer{padding:20px;text-align:center;color:#6b7280;font-size:14px}
+
+    /* Responsive */
+    @media(max-width:800px){
+      .detail{flex-direction:column}
+      .detail .img{width:100%}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">MiCatálogo</div>
+    <nav>
+      <a href="#home" data-link>Inicio</a>
+      <a href="#categories" data-link>Categorías</a>
+      <a href="#cart" data-link id="cart-link">Carrito (<span id="cart-count">0</span>)</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- PANTALLA 1: INDEX / Home -->
+    <section id="screen-home">
+      <h1 style="margin-bottom:12px">Catálogo de productos</h1>
+      <p class="muted" style="margin-bottom:20px">Interfaz simple para que puedas rediseñar y mejorar visualmente.</p>
+      <div class="grid" id="product-grid">
+        <!-- tarjetas generadas por JS -->
+      </div>
+    </section>
+
+    <!-- PANTALLA 2: PRODUCT DETAIL -->
+    <section id="screen-product" class="hidden">
+      <button onclick="goHome()" class="btn-ghost">← Volver</button>
+      <div style="height:12px"></div>
+      <div class="detail">
+        <div class="img" id="detail-img">IMAGEN</div>
+        <div class="info">
+          <div class="badge" id="detail-category">Categoría</div>
+          <h2 id="detail-title">Título del producto</h2>
+          <div style="margin:10px 0" class="price" id="detail-price">$0.00</div>
+          <p id="detail-desc" class="muted">Descripción breve del producto. Aquí puedes extender el texto para probar tipografías y espaciado.</p>
+
+          <div style="margin-top:20px;display:flex;gap:10px">
+            <button class="btn-primary" id="add-to-cart">Agregar al carrito</button>
+            <button class="btn-ghost" id="buy-now">Comprar ahora</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANTALLA 3: CART -->
+    <section id="screen-cart" class="hidden">
+      <h1>Carrito</h1>
+      <p class="muted">Aquí verás los productos que agregaste. El prototipo se centra en la interfaz.</p>
+      <div style="height:12px"></div>
+      <div class="cart-list" id="cart-list">
+        <div class="muted">Tu carrito está vacío.</div>
+      </div>
+      <div style="height:12px"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="muted">Total: <strong id="cart-total">$0.00</strong></div>
+        <div>
+          <button class="btn-ghost" onclick="goHome()">Seguir comprando</button>
+          <button class="btn-primary" id="checkout" style="margin-left:8px">Pagar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANTALLA EXTRA: CATEGORIES -->
+    <section id="screen-categories" class="hidden">
+      <h1>Categorías</h1>
+      <p class="muted">Lista simple de categorías para filtrar (ejercicio de prototipo).</p>
+      <div style="height:12px"></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn-ghost" onclick="filterBy('all')">Todas</button>
+        <button class="btn-ghost" onclick="filterBy('Electronica')">Electrónica</button>
+        <button class="btn-ghost" onclick="filterBy('Hogar')">Hogar</button>
+        <button class="btn-ghost" onclick="filterBy('Accesorios')">Accesorios</button>
+      </div>
+      <div style="height:18px"></div>
+      <div id="categories-grid" class="grid"></div>
+    </section>
+
+  </main>
+
+  <footer>
+    Catalogo de productos - diseño simple.
+  </footer>
+
+  <script>
+    // Datos de ejemplo (fácil de cambiar)
+    const PRODUCTS = [
+      {id:1,title:'Auriculares inalámbricos',price:49.99,category:'Electronica',desc:'Sonido claro y batería de larga duración.'},
+      {id:2,title:'Lámpara de escritorio LED',price:29.50,category:'Hogar',desc:'Iluminación con temperatura de color ajustable.'},
+      {id:3,title:'Funda de silicona',price:12.00,category:'Accesorios',desc:'Protección suave y colores vibrantes.'},
+      {id:4,title:'Altavoz Bluetooth',price:59.90,category:'Electronica',desc:'Potente y portátil.'},
+      {id:5,title:'Taza térmica',price:15.00,category:'Hogar',desc:'Mantiene la bebida a la temperatura ideal.'},
+      {id:6,title:'Cable de carga rápido',price:8.99,category:'Accesorios',desc:'Carga veloz y resistente.'}
+    ];
+
+    // Estado del carrito simple
+    const cart = [];
+
+    function formatMoney(v){return '$'+v.toFixed(2)}
+
+    // Ruteo simple por hash
+    function showScreen(id){
+      const screens = ['screen-home','screen-product','screen-cart','screen-categories'];
+      screens.forEach(s=>document.getElementById(s).classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function goHome(){location.hash = '#home';}
+
+    function renderGrid(list){
+      const grid = document.getElementById('product-grid');
+      grid.innerHTML = '';
+      list.forEach(p=>{
+        const card = document.createElement('div');card.className='card';
+        card.innerHTML = `
+          <div class="thumb">Imagen<br><small class="muted">${p.category}</small></div>
+          <div class="meta">
+            <div class="title">${p.title}</div>
+            <div class="price">${formatMoney(p.price)}</div>
+            <div class="actions">
+              <button class="btn-ghost" onclick="viewProduct(${p.id})">Ver</button>
+              <button class="btn-primary" onclick="addToCart(${p.id})">Añadir</button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      })
+    }
+
+    function viewProduct(id){
+      const p = PRODUCTS.find(x=>x.id===id);
+      if(!p) return;
+      document.getElementById('detail-title').textContent = p.title;
+      document.getElementById('detail-price').textContent = formatMoney(p.price);
+      document.getElementById('detail-desc').textContent = p.desc;
+      document.getElementById('detail-category').textContent = p.category;
+      document.getElementById('detail-img').textContent = p.title;
+      // set up add to cart on detail page
+      document.getElementById('add-to-cart').onclick = ()=>{ addToCart(p.id); location.hash = '#cart'; };
+      location.hash = '#product-' + p.id;
+    }
+
+    function addToCart(id){
+      const p = PRODUCTS.find(x=>x.id===id);
+      if(!p) return;
+      const found = cart.find(i=>i.id===id);
+      if(found) found.qty += 1; else cart.push({id:p.id,title:p.title,price:p.price,qty:1});
+      updateCartUI();
+      // feedback simple
+      const countEl = document.getElementById('cart-count');
+      countEl.textContent = cart.reduce((s,i)=>s+i.qty,0);
+    }
+
+    function updateCartUI(){
+      const list = document.getElementById('cart-list');
+      list.innerHTML = '';
+      if(cart.length===0){ list.innerHTML = '<div class="muted">Tu carrito está vacío.</div>'; document.getElementById('cart-total').textContent = formatMoney(0); return; }
+      let total = 0;
+      cart.forEach(item=>{
+        total += item.price * item.qty;
+        const row = document.createElement('div'); row.className='cart-item';
+        row.innerHTML = `<div style="width:48px;height:48px;background:#eef2ff;border-radius:8px;display:flex;align-items:center;justify-content:center">Img</div>
+                         <div style="flex:1">
+                           <div style="font-weight:700">${item.title}</div>
+                           <div class="muted">${formatMoney(item.price)} x ${item.qty}</div>
+                         </div>
+                         <div>
+                           <button class="btn-ghost" onclick="changeQty(${item.id}, -1)">-</button>
+                           <button class="btn-ghost" onclick="changeQty(${item.id}, 1)">+</button>
+                         </div>`;
+        list.appendChild(row);
+      });
+      document.getElementById('cart-total').textContent = formatMoney(total);
+    }
+
+    function changeQty(id, delta){
+      const it = cart.find(i=>i.id===id);
+      if(!it) return;
+      it.qty += delta;
+      if(it.qty<=0) {
+        const idx = cart.findIndex(i=>i.id===id); cart.splice(idx,1);
+      }
+      updateCartUI();
+      document.getElementById('cart-count').textContent = cart.reduce((s,i)=>s+i.qty,0);
+    }
+
+    function filterBy(cat){
+      if(cat==='all') renderGrid(PRODUCTS);
+      else renderGrid(PRODUCTS.filter(p=>p.category===cat));
+      // also show categories screen grid
+      const cg = document.getElementById('categories-grid'); cg.innerHTML='';
+      const list = (cat==='all')?PRODUCTS:PRODUCTS.filter(p=>p.category===cat);
+      list.forEach(p=>{
+        const card = document.createElement('div');card.className='card';
+        card.innerHTML = `<div class="thumb">Img</div><div style="margin-top:10px"><div class="title">${p.title}</div><div class="price">${formatMoney(p.price)}</div></div>`;
+        cg.appendChild(card);
+      });
+    }
+
+    // Manejo del hash para ruteo
+    function handleHash(){
+      const h = location.hash || '#home';
+      if(h.startsWith('#product-')){
+        // show product
+        showScreen('screen-product');
+      } else if(h === '#cart'){
+        showScreen('screen-cart');
+      } else if(h === '#categories'){
+        showScreen('screen-categories');
+      } else {
+        showScreen('screen-home');
+      }
+    }
+
+    window.addEventListener('hashchange', handleHash);
+
+    // Inicialización
+    function init(){
+      renderGrid(PRODUCTS);
+      filterBy('all');
+      handleHash();
+
+      // enlaces del nav (evitar comportamiento por defecto de anchor)
+      document.querySelectorAll('[data-link]').forEach(a=> a.addEventListener('click', e=>{
+        e.preventDefault(); location.hash = a.getAttribute('href');
+      }));
+
+      // checkout (solo demo)
+      document.getElementById('checkout').addEventListener('click', ()=>{
+        alert('Este prototipo solo evalúa la interfaz. Aquí iría el flujo de pago.');
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>
