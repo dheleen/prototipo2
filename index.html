@@ -113,9 +113,9 @@
       <div style="height:12px"></div>
       <div style="display:flex;gap:12px;flex-wrap:wrap">
         <button class="btn-ghost" onclick="filterBy('all')">Todas</button>
-        <button class="btn-ghost" onclick="filterBy('Electronica')">Electrónica</button>
-        <button class="btn-ghost" onclick="filterBy('Hogar')">Hogar</button>
-        <button class="btn-ghost" onclick="filterBy('Accesorios')">Accesorios</button>
+        <button class="btn-ghost" onclick="filterBy('Electronica')">Fútbol</button>
+        <button class="btn-ghost" onclick="filterBy('Hogar')">Running</button>
+        <button class="btn-ghost" onclick="filterBy('Accesorios')">Gym</button>
       </div>
       <div style="height:18px"></div>
       <div id="categories-grid" class="grid"></div>
@@ -130,12 +130,10 @@
   <script>
     // Datos de ejemplo (fácil de cambiar)
     const PRODUCTS = [
-      {id:1,title:'Auriculares inalámbricos',price:49.99,category:'Electronica',desc:'Sonido claro y batería de larga duración.'},
-      {id:2,title:'Lámpara de escritorio LED',price:29.50,category:'Hogar',desc:'Iluminación con temperatura de color ajustable.'},
-      {id:3,title:'Funda de silicona',price:12.00,category:'Accesorios',desc:'Protección suave y colores vibrantes.'},
-      {id:4,title:'Altavoz Bluetooth',price:59.90,category:'Electronica',desc:'Potente y portátil.'},
-      {id:5,title:'Taza térmica',price:15.00,category:'Hogar',desc:'Mantiene la bebida a la temperatura ideal.'},
-      {id:6,title:'Cable de carga rápido',price:8.99,category:'Accesorios',desc:'Carga veloz y resistente.'}
+      {id:1,title:'Camiseta FEF Alterna 100 años',price:60.00,category:'Fútbol',desc:'Es una prenda diseñada para los fanáticos de la selección nacional de fútbol de Ecuador.'},
+      {id:2,title:'Cuarta equipación Match FC Barcelona',price:75.00,category:'Fútbol',desc:'Rinde homenaje al histórico 0-3 en el Santiago Bernabéu de 2005.'},
+      {id:3,title:'Tenis supernova ease',price:129.00,category:'Running',desc:'Estos tenis de running adidas te ofrecen la comodidad y la sujeción necesarias para alcanzar tus metas.'},
+      {id:4,title:'Camiseta own the run',price:39.90,category:'Running',desc:'Domina la carrera con esta camiseta. A medida que te esfuerzas kilómetro tras kilómetro.'}
     ];
 
     // Estado del carrito simple
@@ -280,3 +278,4 @@
   </script>
 </body>
 </html>
+
